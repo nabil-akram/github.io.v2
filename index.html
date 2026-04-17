@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Georgia', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background: #0a0a0a;
+    color: #fff;
+  }
+  .page { display: none; min-height: 100vh; position: relative; overflow: hidden; }
+  .page.active { display: flex; }
+
+  /* ===== PAGE 1 ===== */
+  #page1 {
+    background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 40%, #1a0a2e 100%);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1.5rem;
+  }
+  .stars { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+  .star {
+    position: absolute; background: #fff; border-radius: 50%;
+    animation: twinkle 3s infinite alternate;
+  }
+  @keyframes twinkle { from { opacity: 0.2; } to { opacity: 1; } }
+
+  .hearts-float { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+  .heart-float {
+    position: absolute;
+    animation: floatUp linear infinite;
+    opacity: 0;
+  }
+  @keyframes floatUp {
+    0%   { opacity: 0; transform: translateY(0) rotate(0deg); }
+    10%  { opacity: 0.8; }
+    90%  { opacity: 0.6; }
+    100% { opacity: 0; transform: translateY(-100vh) rotate(360deg); }
+  }
+
+  #page1 .welcome-text {
+    font-size: clamp(2.4rem, 13vw, 7rem);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #fff;
+    white-space: nowrap;
+    animation: pulse-glow 2s ease-in-out infinite alternate;
+    z-index: 1;
+    position: relative;
+    width: 100%;
+    text-align: center;
+  }
+  @keyframes pulse-glow {
+    from { text-shadow: 0 0 30px rgba(255,180,220,0.6), 0 0 60px rgba(200,100,200,0.3); }
+    to   { text-shadow: 0 0 60px rgba(255,180,220,1),   0 0 120px rgba(200,100,200,0.7); }
+  }
+
+  #page1 .tagline {
+    font-size: clamp(0.85rem, 3.5vw, 1.1rem);
+    font-style: italic;
+    color: rgba(255,180,220,0.7);
+    margin-top: 0.6rem;
+    letter-spacing: 0.06em;
+    z-index: 1;
+    position: relative;
+  }
+
+  .continue-btn {
+    margin-top: 2.5rem;
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    border: 2px solid rgba(255,180,220,0.7);
+    border-radius: 50px;
+    color: #ffb4dc;
+    font-size: clamp(0.75rem, 3vw, 1rem);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    background: rgba(255,180,220,0.08);
+    backdrop-filter: blur(4px);
+    transition: all 0.3s;
+    z-index: 1;
+    position: relative;
+    animation: border-pulse 2s ease-in-out infinite;
+    font-family: Georgia, serif;
+    white-space: nowrap;
+  }
+  .continue-btn:hover {
+    background: rgba(255,180,220,0.2);
+    border-color: #ffb4dc;
+    transform: scale(1.05);
+  }
+  @keyframes border-pulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(255,180,220,0.2); }
+    50%       { box-shadow: 0 0 25px rgba(255,180,220,0.5); }
+  }
+
+  .music-note {
+    position: absolute; top: 1.2rem; right: 1.5rem;
+    font-size: 1.8rem; cursor: pointer; z-index: 10;
+    animation: bounce 1s ease-in-out infinite alternate;
+  }
+  @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-6px); } }
+  .music-label {
+    position: absolute; top: 1rem; right: 4rem;
+    font-size: 0.65rem; color: rgba(255,180,220,0.7);
+    letter-spacing: 0.05em; z-index: 10;
+  }
+
+  /* ===== PAGE 2 ===== */
+  #page2 {
+    background: linear-gradient(160deg, #0d0025 0%, #1e0040 50%, #0d0025 100%);
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem 1.5rem 6rem;
+    text-align: center;
+  }
+  #page2 h1 {
+    font-size: clamp(1.3rem, 5.5vw, 3rem);
+    color: #ffb4dc;
+    text-shadow: 0 0 30px rgba(255,100,180,0.6);
+    letter-spacing: 0.06em;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+  #page2 h1:hover { transform: scale(1.04); }
+  .surprise-hint {
+    font-size: 0.8rem; color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.1em; margin-bottom: 2rem;
+    animation: hint-fade 2s ease-in-out infinite alternate;
+  }
+  @keyframes hint-fade { from { opacity: 0.4; } to { opacity: 0.9; } }
+
+  .wishes-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,180,220,0.2);
+    border-radius: 20px;
+    padding: 1.8rem;
+    max-width: 560px;
+    width: 100%;
+    text-align: left;
+    line-height: 2;
+    font-size: clamp(0.88rem, 2.5vw, 1.05rem);
+    color: rgba(255,240,248,0.9);
+    backdrop-filter: blur(6px);
+  }
+  .wishes-card p { margin-bottom: 1rem; }
+  .surprise-reveal {
+    display: none;
+    margin-top: 1.5rem;
+    padding: 1.2rem 1.5rem;
+    background: rgba(255,180,220,0.1);
+    border-left: 3px solid #ffb4dc;
+    border-radius: 0 12px 12px 0;
+    font-style: italic;
+    color: #ffcce8;
+    font-size: 1.05rem;
+    animation: fadeSlideIn 0.8s ease forwards;
+  }
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .surprise-reveal.visible { display: block; }
+
+  .corner-btn {
+    position: fixed; bottom: 1.5rem; right: 1.5rem;
+    padding: 0.75rem 1.3rem;
+    background: rgba(255,180,220,0.15);
+    border: 1.5px solid rgba(255,180,220,0.5);
+    border-radius: 50px;
+    color: #ffb4dc;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 100;
+    font-family: Georgia, serif;
+    backdrop-filter: blur(4px);
+  }
+  .corner-btn:hover { background: rgba(255,180,220,0.3); transform: scale(1.05); }
+
+  .confetti-piece {
+    position: fixed; top: -10px;
+    border-radius: 2px;
+    animation: confettiFall linear forwards;
+    pointer-events: none; z-index: 200;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* ===== PAGE 3 ===== */
+  #page3 {
+    background: linear-gradient(160deg, #0a001f 0%, #18003a 50%, #0a001f 100%);
+    flex-direction: column;
+    align-items: center;
+    padding: 2.5rem 1.5rem 4rem;
+    text-align: center;
+  }
+  #page3 h2 { font-size: clamp(1.3rem, 5vw, 2.2rem); color: #ffb4dc; text-shadow: 0 0 20px rgba(255,100,180,0.5); margin-bottom: 0.4rem; }
+  .subtitle { font-size: 0.9rem; color: rgba(255,200,230,0.6); margin-bottom: 2rem; letter-spacing: 0.06em; }
+
+  .calendar-wrap {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,180,220,0.2);
+    border-radius: 20px;
+    padding: 1.5rem;
+    max-width: 400px; width: 100%;
+    backdrop-filter: blur(6px);
+  }
+  .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.2rem; }
+  .cal-header h3 { color: #ffb4dc; font-size: 1.1rem; }
+  .cal-nav {
+    background: rgba(255,180,220,0.1);
+    border: 1px solid rgba(255,180,220,0.3);
+    border-radius: 8px; color: #ffb4dc;
+    width: 32px; height: 32px; cursor: pointer;
+    font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .cal-nav:hover { background: rgba(255,180,220,0.25); }
+  .cal-days-header { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 6px; }
+  .cal-days-header span { font-size: 0.65rem; color: rgba(255,180,220,0.5); text-align: center; padding: 4px 0; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .cal-day {
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; font-size: clamp(0.72rem, 2.5vw, 0.85rem);
+    color: rgba(255,220,240,0.85); cursor: pointer;
+    transition: all 0.2s; border: 1px solid transparent;
+  }
+  .cal-day:hover:not(.empty):not(.past) { background: rgba(255,180,220,0.2); border-color: rgba(255,180,220,0.4); }
+  .cal-day.selected { background: #c0467a; color: #fff; border-color: #ffb4dc; box-shadow: 0 0 12px rgba(255,100,180,0.5); font-weight: 600; }
+  .cal-day.today { border-color: rgba(255,180,220,0.4); color: #ffb4dc; }
+  .cal-day.past { color: rgba(255,220,240,0.2); cursor: default; }
+  .cal-day.empty { cursor: default; }
+
+  .selected-dates { margin-top: 1.2rem; min-height: 40px; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+  .date-tag { background: rgba(192,70,122,0.25); border: 1px solid rgba(255,180,220,0.4); border-radius: 20px; padding: 4px 12px; font-size: 0.8rem; color: #ffcce8; }
+
+  .send-btn {
+    margin-top: 1.5rem; padding: 0.9rem 2.5rem;
+    background: linear-gradient(135deg, #c0467a, #8b1a5e);
+    border: none; border-radius: 50px; color: #fff;
+    font-size: 1rem; letter-spacing: 0.08em; cursor: pointer;
+    font-family: Georgia, serif; transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(192,70,122,0.4);
+  }
+  .send-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(192,70,122,0.6); }
+  .send-btn:disabled { opacity: 0.4; cursor: default; transform: none; }
+
+  .page-indicator { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 50; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,180,220,0.3); transition: all 0.3s; }
+  .dot.active { background: #ffb4dc; transform: scale(1.3); }
+</style>
+</head>
+<body>
+
+<div class="page-indicator">
+  <div class="dot active" id="d1"></div>
+  <div class="dot" id="d2"></div>
+  <div class="dot" id="d3"></div>
+</div>
+
+<!-- PAGE 1 -->
+<div class="page active" id="page1">
+  <div class="stars" id="stars"></div>
+  <div class="hearts-float" id="hearts"></div>
+  <div class="music-label">TAP TO MUTE</div>
+  <div class="music-note" id="muteBtn">♪</div>
+  <div class="welcome-text" id="welcomeText">WELCOME!</div>
+  <p class="tagline">Something special awaits you...</p>
+  <button class="continue-btn" onclick="goTo(2)">✦ Click Here to Continue ✦</button>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="page2">
+  <div class="stars" id="stars2"></div>
+  <h1 id="bdayTitle" onclick="revealSurprise()">HAPPY BIRTHDAY SHAZLIN! 🎂</h1>
+  <div class="wishes-card">
+    <p>🌹 Haiii... today's your special day, life moves pretty fast kann... but each and everyday thanks to Allah He gives you the opportunity to breath His air until you 28 and may He gives you more healthy years to come until your hair turns grey and watch your grandkids grown up InsyaAllah. There's once a wise turtle said "Yesterday is history, tomorrow is a mystery and today is the present and that's why it is called a gift" - Master Oogway (if you dont know him try watch kung fu panda) hahah.</p>
+    <p>💫 To be honest you are one of many people that i met that is different from others, the way you think, the way you talk the way you handle your problems and how much you love your family is amazing truly is and especially that one thing that really struck me is that one big smile of yours. That is for me is what makes you special, its like you have this superpower that once i saw that all of my weight floats away, all of the heavy boulders lift up of my shoulders and all the problems gone. </p>
+    <p>🎂 I dont know if you notice this but, you are very strong, independent and caring woman. But even though you can carry the weight on your own, im always near and ready to help you carry those, just reach out whenever you feel disappointed, just call me up whenever you feel sick and no one's there, look me up in your contact list whenever you feel sad, yell at me whenever you feel angry and i promise you this, i will be there. Maybe I dont have much but i will support you in anyway i possibly can.</p>
+    <p>💖 Here's to you, Shazlin — May this day mark the beginning of the best chapter of your life, fill your day with happiness, laughter and spend your time with your loved ones, you deserve all the love you can get because it is worth it. You truly are an amazing person, may all your wishes and dreams come true insyaAllah.</p>
+    <div class="surprise-reveal" id="surpriseMsg">
+      💌 P.S. — You are my favourite person. Thank you for exisitng and for like me in the app.😬✌️
+    </div>
+  </div>
+  <p class="surprise-hint">✨TEKAN TITLE ATAS TU LPSTU SCROLL TO THE BOTTOM✨</p>
+  <button class="corner-btn" onclick="goTo(3)">✦ Continue ✦</button>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page" id="page3">
+  <h2>🥳 Pick A Date!</h2>
+  <p class="subtitle"> Pilih bila you free hehe 🌹</p>
+  <div class="calendar-wrap">
+    <div class="cal-header">
+      <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
+      <h3 id="calTitle"></h3>
+      <button class="cal-nav" onclick="changeMonth(1)">›</button>
+    </div>
+    <div class="cal-days-header">
+      <span>SUN</span><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="selected-dates" id="selectedDates"></div>
+  </div>
+  <button class="send-btn" id="sendBtn" onclick="sendToWhatsApp()" disabled>CONFIRM EHH?? HAHA</button>
+</div>
+
+<audio id="bgMusic" loop>
+  <source src="HAPPY BIRTHDAY TO YOU  PIANO INSTRUMENTAL  BEST HAPPY BITHDAY MUSIC 2021.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  const YOUR_WHATSAPP = "601110973748";
+
+  // Auto-fit WELCOME text to screen width
+  function fitWelcome() {
+    const el = document.getElementById('welcomeText');
+    el.style.fontSize = '10vw';
+    let fs = window.innerWidth * 0.10;
+    el.style.fontSize = fs + 'px';
+    // scale down until it fits with padding
+    while (el.scrollWidth > window.innerWidth - 40 && fs > 20) {
+      fs -= 1;
+      el.style.fontSize = fs + 'px';
+    }
+  }
+  fitWelcome();
+  window.addEventListener('resize', fitWelcome);
+
+  // Stars
+  function makeStars(id) {
+    const c = document.getElementById(id);
+    if (!c) return;
+    for (let i = 0; i < 80; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      const sz = Math.random() * 2.5 + 0.5;
+      s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${2+Math.random()*3}s`;
+      c.appendChild(s);
+    }
+  }
+  makeStars('stars'); makeStars('stars2');
+
+  // Hearts
+  const hc = document.getElementById('hearts');
+  const hChars = ['♥','♡','❤','💕','🌹'];
+  for (let i = 0; i < 12; i++) {
+    const h = document.createElement('div');
+    h.className = 'heart-float';
+    h.textContent = hChars[Math.floor(Math.random()*hChars.length)];
+    h.style.cssText = `left:${Math.random()*100}%;bottom:-5%;animation-duration:${6+Math.random()*8}s;animation-delay:${Math.random()*8}s;font-size:${1+Math.random()*1.5}rem;`;
+    hc.appendChild(h);
+  }
+
+  // Music
+  const music = document.getElementById('bgMusic');
+  const muteBtn = document.getElementById('muteBtn');
+  let muted = false;
+  window.addEventListener('click', function start() {
+    music.play().catch(()=>{});
+    window.removeEventListener('click', start);
+  }, { once: true });
+  muteBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    muted = !muted;
+    music.muted = muted;
+    muteBtn.textContent = muted ? '🔇' : '♪';
+  });
+
+  // Navigation
+  function goTo(n) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
+    document.getElementById('page'+n).classList.add('active');
+    document.getElementById('d'+n).classList.add('active');
+    window.scrollTo(0,0);
+    if (n === 2) { music.play().catch(()=>{}); setTimeout(launchConfetti, 300); }
+    if (n === 3) renderCalendar();
+  }
+
+  // Surprise
+  let surprised = false;
+  function revealSurprise() {
+    if (surprised) return;
+    surprised = true;
+    document.getElementById('surpriseMsg').classList.add('visible');
+    document.querySelector('.surprise-hint').textContent = '💖';
+    launchConfetti();
+  }
+
+  // Confetti
+  function launchConfetti() {
+    const colors = ['#ffb4dc','#ff69b4','#c084fc','#f9a8d4','#fde68a','#a78bfa'];
+    for (let i = 0; i < 60; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.cssText = `left:${Math.random()*100}vw;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${1.5+Math.random()*2}s;animation-delay:${Math.random()*0.5}s;width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;border-radius:${Math.random()>0.5?'50%':'2px'}`;
+      document.body.appendChild(c);
+      setTimeout(()=>c.remove(), 4000);
+    }
+  }
+
+  // Calendar
+  const today = new Date();
+  let calYear = today.getFullYear(), calMonth = today.getMonth();
+  let selectedDays = {};
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  function renderCalendar() {
+    document.getElementById('calTitle').textContent = MONTHS[calMonth] + ' ' + calYear;
+    const grid = document.getElementById('calGrid');
+    grid.innerHTML = '';
+    const firstDay = new Date(calYear, calMonth, 1).getDay();
+    const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+    for (let i = 0; i < firstDay; i++) {
+      const el = document.createElement('div'); el.className='cal-day empty'; grid.appendChild(el);
+    }
+    for (let d = 1; d <= daysInMonth; d++) {
+      const el = document.createElement('div'); el.className='cal-day'; el.textContent=d;
+      const key = calYear+'-'+(calMonth+1)+'-'+d;
+      const thisDate = new Date(calYear, calMonth, d);
+      if (thisDate < new Date(today.getFullYear(), today.getMonth(), today.getDate())) {
+        el.classList.add('past');
+      } else {
+        if (thisDate.toDateString()===today.toDateString()) el.classList.add('today');
+        if (selectedDays[key]) el.classList.add('selected');
+        el.onclick = () => toggleDay(key, d, el);
+      }
+      grid.appendChild(el);
+    }
+  }
+
+  function toggleDay(key, d, el) {
+    if (selectedDays[key]) { delete selectedDays[key]; el.classList.remove('selected'); }
+    else { selectedDays[key] = { label: d+' '+MONTHS[calMonth]+' '+calYear }; el.classList.add('selected'); }
+    updateDates();
+  }
+  function updateDates() {
+    const wrap = document.getElementById('selectedDates');
+    const btn = document.getElementById('sendBtn');
+    wrap.innerHTML = '';
+    Object.keys(selectedDays).sort().forEach(k => {
+      const t = document.createElement('div'); t.className='date-tag'; t.textContent=selectedDays[k].label; wrap.appendChild(t);
+    });
+    btn.disabled = Object.keys(selectedDays).length === 0;
+  }
+  function changeMonth(dir) {
+    calMonth += dir;
+    if (calMonth > 11) { calMonth=0; calYear++; }
+    if (calMonth < 0)  { calMonth=11; calYear--; }
+    renderCalendar();
+  }
+  function sendToWhatsApp() {
+    const dates = Object.keys(selectedDays).sort().map(k=>selectedDays[k].label).join(', ');
+    const msg = encodeURIComponent("Hi! \nI free on:\n"+dates+"\nThank you! 🙌✨");
+    window.open("https://wa.me/"+YOUR_WHATSAPP+"?text="+msg, '_blank');
+  }
+
+  renderCalendar();
+</script>
+</body>
+</html>
