@@ -202,12 +202,108 @@
     background: linear-gradient(160deg, #0a001f 0%, #18003a 50%, #0a001f 100%);
     flex-direction: column;
     align-items: center;
-    padding: 2.5rem 1.5rem 4rem;
+    padding: 2.5rem 1.5rem 5rem;
     text-align: center;
   }
   #page3 h2 { font-size: clamp(1.3rem, 5vw, 2.2rem); color: #ffb4dc; text-shadow: 0 0 20px rgba(255,100,180,0.5); margin-bottom: 0.4rem; }
-  .subtitle { font-size: 0.9rem; color: rgba(255,200,230,0.6); margin-bottom: 2rem; letter-spacing: 0.06em; }
+  .subtitle { font-size: 0.9rem; color: rgba(255,200,230,0.6); margin-bottom: 1.5rem; letter-spacing: 0.06em; }
 
+  /* ===== OPTIONS A/B/C ===== */
+  .options-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    color: rgba(255,180,220,0.5);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    max-width: 680px;
+    width: 100%;
+    margin-bottom: 1.8rem;
+  }
+  @media (max-width: 500px) {
+    .options-grid { grid-template-columns: 1fr; gap: 10px; }
+  }
+  .option-card {
+    background: rgba(255,255,255,0.03);
+    border: 1.5px solid rgba(255,180,220,0.18);
+    border-radius: 16px;
+    padding: 1.2rem 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+  }
+  .option-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,180,220,0.08), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .option-card:hover { border-color: rgba(255,180,220,0.45); transform: translateY(-3px); }
+  .option-card:hover::before { opacity: 1; }
+  .option-card.selected {
+    border-color: #ffb4dc;
+    background: rgba(192,70,122,0.18);
+    box-shadow: 0 0 20px rgba(255,100,180,0.25);
+    transform: translateY(-3px);
+  }
+  .option-card.selected::before { opacity: 1; }
+
+  .option-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(255,180,220,0.12);
+    border: 1.5px solid rgba(255,180,220,0.35);
+    color: #ffb4dc;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.8rem;
+    transition: all 0.3s;
+  }
+  .option-card.selected .option-badge {
+    background: #c0467a;
+    border-color: #ffb4dc;
+    box-shadow: 0 0 10px rgba(255,100,180,0.4);
+  }
+
+  .option-section-title {
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,180,220,0.45);
+    margin-bottom: 0.2rem;
+    margin-top: 0.7rem;
+  }
+  .option-section-title:first-of-type { margin-top: 0; }
+  .option-item {
+    font-size: clamp(0.72rem, 2vw, 0.82rem);
+    color: rgba(255,230,244,0.88);
+    line-height: 1.5;
+    padding: 0.15rem 0;
+  }
+  .option-item.optional {
+    color: rgba(255,200,230,0.45);
+    font-style: italic;
+    font-size: 0.72rem;
+  }
+  .option-checkmark {
+    position: absolute; top: 10px; right: 12px;
+    font-size: 1rem; opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .option-card.selected .option-checkmark { opacity: 1; }
+
+  /* ===== CALENDAR ===== */
   .calendar-wrap {
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,180,220,0.2);
@@ -259,6 +355,15 @@
   .page-indicator { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 50; }
   .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,180,220,0.3); transition: all 0.3s; }
   .dot.active { background: #ffb4dc; transform: scale(1.3); }
+
+  /* calendar section label */
+  .cal-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    color: rgba(255,180,220,0.5);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
 </style>
 </head>
 <body>
@@ -308,7 +413,55 @@ Thank you for existing. Thank you for sticking by me until today. I really hope 
 <!-- PAGE 3 -->
 <div class="page" id="page3">
   <h2>🥳 Pick A Date!</h2>
-  <p class="subtitle"> Pilih bila you free hehe 🌹</p>
+  <p class="subtitle">Pilih bila you free hehe 🌹</p>
+
+  <!-- OPTIONS A / B / C -->
+  <p class="options-label">✦ Choose Your Vibe ✦</p>
+  <div class="options-grid">
+
+    <!-- OPTION A -->
+    <div class="option-card" id="optA" onclick="selectOption('A')">
+      <div class="option-checkmark">✓</div>
+      <div class="option-badge">A</div>
+      <div class="option-section-title">🍽️ F&amp;B</div>
+      <div class="option-item">Lunch — The Veil</div>
+      <div class="option-item">Dessert — 1975 Toast n Coffee</div>
+      <div class="option-item optional">Dinner — Mamak (optional)</div>
+      <div class="option-section-title">🎉 Activities</div>
+      <div class="option-item">Ice Skate</div>
+      <div class="option-item">Indoor Snow</div>
+    </div>
+
+    <!-- OPTION B -->
+    <div class="option-card" id="optB" onclick="selectOption('B')">
+      <div class="option-checkmark">✓</div>
+      <div class="option-badge">B</div>
+      <div class="option-section-title">🍽️ F&amp;B</div>
+      <div class="option-item">Lunch — Attic by Raw</div>
+      <div class="option-item">Dessert — Break Room Café</div>
+      <div class="option-item optional">Dinner — Mamak (optional)</div>
+      <div class="option-section-title">🎉 Activities</div>
+      <div class="option-item">Boat Sungai Melayu</div>
+      <div class="option-item">Indoor Zoo</div>
+    </div>
+
+    <!-- OPTION C -->
+    <div class="option-card" id="optC" onclick="selectOption('C')">
+      <div class="option-checkmark">✓</div>
+      <div class="option-badge">C</div>
+      <div class="option-section-title">🍽️ F&amp;B</div>
+      <div class="option-item">Lunch — Flame n Fern</div>
+      <div class="option-item">Dessert — Cat Soufflé Café</div>
+      <div class="option-item">Dinner — 22nd Café</div>
+      <div class="option-section-title">🎉 Activities</div>
+      <div class="option-item">Escape Room</div>
+      <div class="option-item">Baking / Game On</div>
+    </div>
+
+  </div>
+
+  <!-- CALENDAR -->
+  <p class="cal-label">✦ Then Pick A Date ✦</p>
   <div class="calendar-wrap">
     <div class="cal-header">
       <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
@@ -321,6 +474,7 @@ Thank you for existing. Thank you for sticking by me until today. I really hope 
     <div class="cal-grid" id="calGrid"></div>
     <div class="selected-dates" id="selectedDates"></div>
   </div>
+
   <button class="send-btn" id="sendBtn" onclick="sendToWhatsApp()" disabled>CONFIRM EHH?? HAHA</button>
 </div>
 
@@ -331,13 +485,11 @@ Thank you for existing. Thank you for sticking by me until today. I really hope 
 <script>
   const YOUR_WHATSAPP = "601110973748";
 
-  // Auto-fit WELCOME text to screen width
+  // Auto-fit WELCOME text
   function fitWelcome() {
     const el = document.getElementById('welcomeText');
-    el.style.fontSize = '10vw';
     let fs = window.innerWidth * 0.10;
     el.style.fontSize = fs + 'px';
-    // scale down until it fits with padding
     while (el.scrollWidth > window.innerWidth - 40 && fs > 20) {
       fs -= 1;
       el.style.fontSize = fs + 'px';
@@ -419,6 +571,18 @@ Thank you for existing. Thank you for sticking by me until today. I really hope 
     }
   }
 
+  // Option selection
+  let selectedOption = null;
+  function selectOption(opt) {
+    ['A','B','C'].forEach(o => {
+      document.getElementById('opt'+o).classList.remove('selected');
+    });
+    selectedOption = opt;
+    document.getElementById('opt'+opt).classList.add('selected');
+    updateSendBtn();
+    launchConfetti();
+  }
+
   // Calendar
   const today = new Date();
   let calYear = today.getFullYear(), calMonth = today.getMonth();
@@ -456,12 +620,15 @@ Thank you for existing. Thank you for sticking by me until today. I really hope 
   }
   function updateDates() {
     const wrap = document.getElementById('selectedDates');
-    const btn = document.getElementById('sendBtn');
     wrap.innerHTML = '';
     Object.keys(selectedDays).sort().forEach(k => {
       const t = document.createElement('div'); t.className='date-tag'; t.textContent=selectedDays[k].label; wrap.appendChild(t);
     });
-    btn.disabled = Object.keys(selectedDays).length === 0;
+    updateSendBtn();
+  }
+  function updateSendBtn() {
+    const btn = document.getElementById('sendBtn');
+    btn.disabled = !(selectedOption && Object.keys(selectedDays).length > 0);
   }
   function changeMonth(dir) {
     calMonth += dir;
@@ -469,9 +636,12 @@ Thank you for existing. Thank you for sticking by me until today. I really hope 
     if (calMonth < 0)  { calMonth=11; calYear--; }
     renderCalendar();
   }
+
   function sendToWhatsApp() {
     const dates = Object.keys(selectedDays).sort().map(k=>selectedDays[k].label).join(', ');
-    const msg = encodeURIComponent("Hi! \nI free on:\n"+dates+"\nThank you! 🙌✨");
+    const msg = encodeURIComponent(
+      "Hi! 🌹\nI choose Option " + selectedOption + "!\nAnd I'm free on:\n" + dates + "\nThank you! 🙌✨"
+    );
     window.open("https://wa.me/"+YOUR_WHATSAPP+"?text="+msg, '_blank');
   }
 
