@@ -231,10 +231,10 @@
     background: rgba(255,255,255,0.03);
     border: 1.5px solid rgba(255,180,220,0.18);
     border-radius: 16px;
-    padding: 1.2rem 1rem;
+    padding: 1.4rem 1rem 1.2rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    text-align: left;
+    text-align: center;
     position: relative;
     overflow: hidden;
   }
@@ -276,26 +276,19 @@
     box-shadow: 0 0 10px rgba(255,100,180,0.4);
   }
 
-  .option-section-title {
-    font-size: 0.6rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: rgba(255,180,220,0.45);
-    margin-bottom: 0.2rem;
-    margin-top: 0.7rem;
+  .option-theme-icon {
+    font-size: 2.2rem;
+    margin: 0.5rem 0 0.4rem;
+    display: block;
   }
-  .option-section-title:first-of-type { margin-top: 0; }
-  .option-item {
-    font-size: clamp(0.72rem, 2vw, 0.82rem);
-    color: rgba(255,230,244,0.88);
-    line-height: 1.5;
-    padding: 0.15rem 0;
+  .option-theme-name {
+    font-size: clamp(1rem, 3.5vw, 1.2rem);
+    color: rgba(255,230,244,0.95);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.3rem;
   }
-  .option-item.optional {
-    color: rgba(255,200,230,0.45);
-    font-style: italic;
-    font-size: 0.72rem;
-  }
+  .option-card.selected .option-theme-name { color: #fff; }
   .option-checkmark {
     position: absolute; top: 10px; right: 12px;
     font-size: 1rem; opacity: 0;
@@ -423,39 +416,24 @@ Thank you for existing. Thank you for sticking by me until today. I really hope 
     <div class="option-card" id="optA" onclick="selectOption('A')">
       <div class="option-checkmark">✓</div>
       <div class="option-badge">A</div>
-      <div class="option-section-title">🍽️ F&amp;B</div>
-      <div class="option-item">Lunch — The Veil</div>
-      <div class="option-item">Dessert — 1975 Toast n Coffee</div>
-      <div class="option-item optional">Dinner — Mamak (optional)</div>
-      <div class="option-section-title">🎉 Activities</div>
-      <div class="option-item">Ice Skate</div>
-      <div class="option-item">Indoor Snow</div>
+      <div class="option-theme-icon">❄️</div>
+      <div class="option-theme-name">Winter</div>
     </div>
 
     <!-- OPTION B -->
     <div class="option-card" id="optB" onclick="selectOption('B')">
       <div class="option-checkmark">✓</div>
       <div class="option-badge">B</div>
-      <div class="option-section-title">🍽️ F&amp;B</div>
-      <div class="option-item">Lunch — Attic by Raw</div>
-      <div class="option-item">Dessert — Break Room Café</div>
-      <div class="option-item optional">Dinner — Mamak (optional)</div>
-      <div class="option-section-title">🎉 Activities</div>
-      <div class="option-item">Boat Sungai Melayu</div>
-      <div class="option-item">Indoor Zoo</div>
+      <div class="option-theme-icon">🌿</div>
+      <div class="option-theme-name">Nature</div>
     </div>
 
     <!-- OPTION C -->
     <div class="option-card" id="optC" onclick="selectOption('C')">
       <div class="option-checkmark">✓</div>
       <div class="option-badge">C</div>
-      <div class="option-section-title">🍽️ F&amp;B</div>
-      <div class="option-item">Lunch — Flame n Fern</div>
-      <div class="option-item">Dessert — Cat Soufflé Café</div>
-      <div class="option-item">Dinner — 22nd Café</div>
-      <div class="option-section-title">🎉 Activities</div>
-      <div class="option-item">Escape Room</div>
-      <div class="option-item">Baking / Game On</div>
+      <div class="option-theme-icon">🏠</div>
+      <div class="option-theme-name">Indoor</div>
     </div>
 
   </div>
